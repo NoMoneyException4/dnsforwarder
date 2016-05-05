@@ -1,0 +1,6 @@
+* Resolve with proxies
+* DNS cache
+* DNS upstream fallback
+* Proxy fallback
+* Log with levels
+
