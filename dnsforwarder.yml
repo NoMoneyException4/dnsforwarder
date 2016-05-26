@@ -1,0 +1,18 @@
+cache:
+  enable: true
+  ttl: 3600
+loggers:
+  console:
+    enable: true
+  file:
+    enable: true
+    level: error #also in these values: debug info notice warning error critical
+    path: /tmp/dnsforwarder.log
+timeout:
+    read: 200 #timeout for read from upstreams
+    write: 200 #timeout for write data to request clients
+upstreams:
+    - "tcp://8.8.8.8:53"
+    - "tcp://119.29.29.29:53"
+    - "udp://8.8.8.8:53"
+    - "udp://8.8.4.4:53"

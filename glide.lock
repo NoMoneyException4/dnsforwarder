@@ -1,0 +1,14 @@
+hash: 435ee768ebac83a892ed9d4a432950e58bcc78b922030369f9ad268376d1d5e5
+updated: 2016-05-26T14:43:25.703101318+08:00
+imports:
+- name: github.com/codebear4/ttlcache
+  version: 443510b3bb74c604e9a6dfd56ff3cd10b8747f64
+- name: github.com/go-yaml/yaml
+  version: a83829b6f1293c91addabc89d0571c246397bbf4
+- name: github.com/mailgun/cfg
+  version: 209f519eeb475daf0de6399133ff05ebcb455d16
+- name: github.com/miekg/dns
+  version: 48ab6605c66ac797e07f615101c3e9e10e932b66
+- name: github.com/op/go-logging
+  version: 970db520ece77730c7e4724c61121037378659d9
+devImports: []
