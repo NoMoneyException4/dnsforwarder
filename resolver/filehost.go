@@ -36,7 +36,7 @@ func (host *FileHost) Get(domain string) (error, *Record) {
 	return errors.New("Not found."), nil
 }
 
-func (host *FileHost) Set(domain string, record Record) error {
+func (host *FileHost) Set(domain string, record *Record) error {
 	host.hosts[domain] = append(host.hosts[domain], record.Addrs...)
 	return nil
 }

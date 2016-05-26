@@ -29,7 +29,7 @@ func (host *CacheHost) Get(domain string) (error, *Record) {
 	return nil, &record
 }
 
-func (host *CacheHost) Set(domain string, record Record) error {
+func (host *CacheHost) Set(domain string, record *Record) error {
 	recordBytes, err := json.Marshal(record)
 	if err != nil {
 		return err
