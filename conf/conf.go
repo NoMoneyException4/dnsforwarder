@@ -5,6 +5,10 @@ type Configuration struct {
 		Read  uint8
 		Write uint8
 	}
+	Hosts struct {
+		Enable  bool
+		Resolvs []string
+	}
 	Upstreams []string
 	Loggers   struct {
 		Console struct {
