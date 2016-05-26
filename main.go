@@ -2,9 +2,11 @@ package main
 
 import (
 	"flag"
+	"fmt"
 
 	. "github.com/codebear4/dnsforwarder/conf"
 	. "github.com/codebear4/dnsforwarder/logger"
+	"github.com/codebear4/dnsforwarder/resolver"
 )
 
 func initial() {
@@ -19,5 +21,10 @@ func initial() {
 
 func main() {
 	initial()
-	Logger.Error(Conf.Loggers.File.Enable)
+	fileHost := resolver.NewFileHost()
+	err, record := fileHost.Get("www.sipin.frank")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%#v", record)
 }

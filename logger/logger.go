@@ -11,10 +11,10 @@ import (
 var (
 	Logger *logging.Logger
 	format = logging.MustStringFormatter(
-		`%{color} %{level} %{time:2006-01-02 15:04:05}:%{color:reset} %{message}`,
+		`%{color} %{longfunc} %{level} %{time:2006-01-02 15:04:05}:%{color:reset} %{message}`,
 	)
 	fileFormat = logging.MustStringFormatter(
-		`%{level} %{time:2006-01-02 15:04:05}: %{message}`,
+		`%{longfunc} %{level} %{time:2006-01-02 15:04:05}: %{message}`,
 	)
 )
 

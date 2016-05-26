@@ -6,7 +6,7 @@ loggers:
     enable: true
   file:
     enable: true
-    level: error #Also in these values: debug info notice warning error critical
+    level: debug #Also in these values: debug info notice warning error critical
     path: /tmp/dnsforwarder.log
 timeout:
     read: 200 #Timeout for read from upstreams
@@ -14,7 +14,7 @@ timeout:
 hosts:
     enable: true #Enable hosts file support
     resolvs:
-        - /etc/resolv.conf
+        - /etc/hosts
 upstreams:
     - "tcp://8.8.8.8:53"
     - "tcp://119.29.29.29:53"
