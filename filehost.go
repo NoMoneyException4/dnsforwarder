@@ -42,6 +42,23 @@ func (host *FileHost) Set(domain string, record *Record) error {
 	return nil
 }
 
+//All Get all hosts
+func (host *FileHost) All() []*Record {
+	all := make([]*Record, len(host.hosts))
+	for key, _ := range host.hosts {
+		record, err := host.Get(key)
+		if err == nil {
+			all = append(all, record)
+		}
+	}
+	return all
+}
+
+//Clear Clear all hosts
+func (host *FileHost) Clear() {
+	host.hosts = make(map[string][]net.IP, 0)
+}
+
 //Refresh Refresh the cached records
 func (host *FileHost) Refresh() {
 	for _, file := range host.files {

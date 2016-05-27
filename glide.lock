@@ -1,5 +1,5 @@
 hash: 53b2eb61c84aa8b1d4f5becc4725239207d526c2404cbe62e05896f1bab49c50
-updated: 2016-05-27T10:25:41.444988424+08:00
+updated: 2016-05-27T11:00:15.190278255+08:00
 imports:
 - name: github.com/codebear4/ttlcache
   version: 443510b3bb74c604e9a6dfd56ff3cd10b8747f64

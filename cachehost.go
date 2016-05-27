@@ -34,6 +34,24 @@ func (host *CacheHost) Get(domain string) (*Record, error) {
 	return &record, nil
 }
 
+//All Get all hosts
+func (host *CacheHost) All() []*Record {
+	allKeys := host.store.Items()
+	all := make([]*Record, len(allKeys))
+	for key, _ := range allKeys {
+		record, err := host.Get(key)
+		if err == nil {
+			all = append(all, record)
+		}
+	}
+	return all
+}
+
+//Clear Purge hosts
+func (host *CacheHost) Clear() {
+	host.store = ttlcache.NewCache()
+}
+
 //Set Set host with given Record
 func (host *CacheHost) Set(domain string, record *Record) error {
 	recordBytes, err := json.Marshal(record)
