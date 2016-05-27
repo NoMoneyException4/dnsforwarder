@@ -1,5 +1,5 @@
-hash: 53b2eb61c84aa8b1d4f5becc4725239207d526c2404cbe62e05896f1bab49c50
-updated: 2016-05-27T11:00:15.190278255+08:00
+hash: fa8101df692a32bdd8bd5e63cb66ff7325e73f7de1f9c099af4ce72a334dd7d4
+updated: 2016-05-27T14:28:57.898748133+08:00
 imports:
 - name: github.com/codebear4/ttlcache
   version: 443510b3bb74c604e9a6dfd56ff3cd10b8747f64
@@ -13,6 +13,8 @@ imports:
   version: 970db520ece77730c7e4724c61121037378659d9
 - name: github.com/stretchr/testify
   version: 8d64eb7173c7753d6419fd4a9caf057398611364
+  subpackages:
+  - assert
 - name: gopkg.in/check.v1
   version: 4f90aeace3a26ad7021961c297b22c42160c7b25
 - name: gopkg.in/yaml.v2

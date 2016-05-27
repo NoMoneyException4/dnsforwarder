@@ -12,7 +12,7 @@ var (
 type configuration struct {
 	Cache struct {
 		Enable bool
-		Ttl    int
+		TTL    int
 	}
 	Timeout struct {
 		Read  int

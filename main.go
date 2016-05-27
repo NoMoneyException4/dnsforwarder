@@ -25,7 +25,7 @@ func initial() {
 
 func main() {
 	initial()
-	server := NewServer(listenHost, listenPort, time.Duration(Conf.Timeout.Read), time.Duration(Conf.Timeout.Write))
+	server := NewServer(listenHost, listenPort, time.Duration(Conf.Timeout.Read)*time.Millisecond, time.Duration(Conf.Timeout.Write)*time.Millisecond)
 	server.Listen()
 
 	sig := make(chan os.Signal)

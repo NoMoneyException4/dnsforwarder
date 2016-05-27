@@ -6,6 +6,8 @@ import (
 	"net"
 	"os"
 	"strings"
+
+	"github.com/miekg/dns"
 )
 
 //FileHost File based host resolver
@@ -30,9 +32,10 @@ func NewFileHost() *FileHost {
 func (host *FileHost) Get(domain string) (*Record, error) {
 	addrs, ok := host.hosts[domain]
 	if ok {
-		return &Record{Domain: domain, Ttl: 0, Addrs: addrs}, nil
+		Logger.Debugf("Domain %s found in hosts files.", domain)
+		return &Record{Domain: domain, TTL: 0, Addrs: addrs}, nil
 	}
-	Logger.Debugf("Domain %s not found in hosts files.", domain)
+	Logger.Debugf("Domain %s not found in hosts files %#v.", domain, host.hosts)
 	return nil, errors.New("Not found.")
 }
 
@@ -45,7 +48,7 @@ func (host *FileHost) Set(domain string, record *Record) error {
 //All Get all hosts
 func (host *FileHost) All() []*Record {
 	all := make([]*Record, len(host.hosts))
-	for key, _ := range host.hosts {
+	for key := range host.hosts {
 		record, err := host.Get(key)
 		if err == nil {
 			all = append(all, record)
@@ -99,6 +102,7 @@ func (host *FileHost) Refresh() {
 			}
 
 			domain = strings.ToLower(domain)
+			domain = dns.Fqdn(domain)
 			ip := net.ParseIP(ipString)
 			if ip == nil {
 				continue

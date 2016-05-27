@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	//Logger Global logger
 	Logger *logging.Logger
 	format = logging.MustStringFormatter(
 		`%{color} %{longfunc} %{level} %{time:2006-01-02 15:04:05}:%{color:reset} %{message}`,
@@ -16,9 +17,10 @@ var (
 	)
 )
 
+//InitLogger Init Logger
 func InitLogger() {
 	Logger = logging.MustGetLogger("dnsforwarder")
-	loggers := make([]logging.Backend, 0)
+	var loggers []logging.Backend
 
 	if Conf.Loggers.Console.Enable {
 		consoleBackend := logging.NewLogBackend(os.Stderr, "DnsForwarder", 0)

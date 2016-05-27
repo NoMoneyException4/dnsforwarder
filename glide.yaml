@@ -5,6 +5,8 @@ import:
 - package: github.com/miekg/dns
 - package: github.com/mailgun/cfg
 - package: github.com/stretchr/testify
+  subpackages:
+  - assert
 - package: launchpad.net/gocheck
 - package: gopkg.in/check.v1
 - package: gopkg.in/yaml.v2

@@ -15,14 +15,15 @@ type CacheHost struct {
 
 //NewCacheHost New CacheHost
 func NewCacheHost() *CacheHost {
-	return &CacheHost{store: ttlcache.NewCache()}
+	host := &CacheHost{store: ttlcache.NewCache()}
+	return host
 }
 
 //Get Get host from cache
 func (host *CacheHost) Get(domain string) (*Record, error) {
 	recordString, ok := host.store.Get(domain)
 	if !ok {
-		Logger.Debugf("Domain %s not found in the memory cache.", domain)
+		Logger.Debugf("Domain %s not found in the memory cache. %#v", domain, host.store.Items())
 		return nil, errors.New("Not found.")
 	}
 	var record Record
@@ -31,6 +32,7 @@ func (host *CacheHost) Get(domain string) (*Record, error) {
 		Logger.Debugf("Domain record %s unmarshal failed.", domain)
 		return nil, err
 	}
+	Logger.Debugf("Domain %s hit cache.", domain)
 	return &record, nil
 }
 
@@ -38,7 +40,7 @@ func (host *CacheHost) Get(domain string) (*Record, error) {
 func (host *CacheHost) All() []*Record {
 	allKeys := host.store.Items()
 	all := make([]*Record, len(allKeys))
-	for key, _ := range allKeys {
+	for key := range allKeys {
 		record, err := host.Get(key)
 		if err == nil {
 			all = append(all, record)
@@ -60,7 +62,7 @@ func (host *CacheHost) Set(domain string, record *Record) error {
 		return err
 	}
 
-	host.store.SetWithTTL(domain, string(recordBytes), time.Duration(record.Ttl)*time.Second)
+	host.store.SetWithTTL(domain, string(recordBytes), time.Duration(record.TTL)*time.Second)
 	return nil
 }
 

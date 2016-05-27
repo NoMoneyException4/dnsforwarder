@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net"
 	"time"
 
@@ -15,6 +16,7 @@ type Server struct {
 	WriteTimeout time.Duration
 }
 
+//NewServer New Server
 func NewServer(host, port string, rt, wt time.Duration) *Server {
 	return &Server{
 		Host:         host,
@@ -64,6 +66,6 @@ func (s *Server) start(ds *dns.Server) {
 	Logger.Infof("Start %s server listening on %s", ds.Net, s.Addr())
 	err := ds.ListenAndServe()
 	if err != nil {
-		Logger.Errorf("Start %s server failed:%s", ds.Net, err.Error())
+		log.Fatalf("Start %s server failed:%s", ds.Net, err.Error())
 	}
 }
