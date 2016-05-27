@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/miekg/dns"
 )
 
@@ -40,7 +38,7 @@ func (h *Handler) HandleUDP(w dns.ResponseWriter, req *dns.Msg) {
 	h.handle("upd", w, req)
 }
 
-func QueryType(question dns.Question) int {
+func (h *Handler) QueryType(question dns.Question) int {
 	if question.Qclass != dns.ClassINET {
 		return QUERY_TYPE_NONE
 	}
