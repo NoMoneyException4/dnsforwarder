@@ -23,7 +23,7 @@ func NewCacheHost() *CacheHost {
 func (host *CacheHost) Get(domain string) (*Record, error) {
 	recordString, ok := host.store.Get(domain)
 	if !ok {
-		Logger.Debugf("Domain %s not found in the memory cache. %#v", domain, host.store.Items())
+		Logger.Debugf("Domain %s not found in the memory cache.", domain)
 		return nil, errors.New("Not found.")
 	}
 	var record Record

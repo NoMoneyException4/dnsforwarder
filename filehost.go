@@ -35,7 +35,7 @@ func (host *FileHost) Get(domain string) (*Record, error) {
 		Logger.Debugf("Domain %s found in hosts files.", domain)
 		return &Record{Domain: domain, TTL: 0, Addrs: addrs}, nil
 	}
-	Logger.Debugf("Domain %s not found in hosts files %#v.", domain, host.hosts)
+	Logger.Debugf("Domain %s not found in hosts files.", domain)
 	return nil, errors.New("Not found.")
 }
 

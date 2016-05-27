@@ -53,9 +53,19 @@ func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
 			m.Answer = append(m.Answer, answer)
 		}
 		w.WriteMsg(m)
+		return
 	}
 
 	//Lookup with forwarder
+	resp, err := h.forwarder.Lookup(req, net)
+	if resp == nil {
+		m := new(dns.Msg)
+		m.SetRcode(req, dns.RcodeServerFailure)
+		w.WriteMsg(m)
+		return
+	}
+	w.WriteMsg(resp)
+	return
 }
 
 //HandleTCP Handle TCP conn
@@ -65,7 +75,7 @@ func (h *Handler) HandleTCP(w dns.ResponseWriter, req *dns.Msg) {
 
 //HandleUDP Handle UDP conn
 func (h *Handler) HandleUDP(w dns.ResponseWriter, req *dns.Msg) {
-	h.handle("upd", w, req)
+	h.handle("udp", w, req)
 }
 
 func (h *Handler) queryType(question dns.Question) uint16 {
