@@ -12,11 +12,11 @@ var (
 type configuration struct {
 	Cache struct {
 		Enable bool
-		Ttl    uint
+		Ttl    int
 	}
 	Timeout struct {
-		Read  uint8
-		Write uint8
+		Read  int
+		Write int
 	}
 	Hosts struct {
 		Enable  bool
