@@ -10,6 +10,10 @@ var (
 )
 
 type configuration struct {
+	Cache struct {
+		Enable bool
+		Ttl    uint
+	}
 	Timeout struct {
 		Read  uint8
 		Write uint8
