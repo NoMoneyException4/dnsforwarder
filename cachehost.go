@@ -1,4 +1,4 @@
-package resolver
+package main
 
 import (
 	"encoding/json"
@@ -8,30 +8,37 @@ import (
 	"github.com/codebear4/ttlcache"
 )
 
+//CacheHost In-memory based host cache
 type CacheHost struct {
 	store *ttlcache.Cache
 }
 
+//NewCacheHost New CacheHost
 func NewCacheHost() *CacheHost {
 	return &CacheHost{store: ttlcache.NewCache()}
 }
 
-func (host *CacheHost) Get(domain string) (error, *Record) {
+//Get Get host from cache
+func (host *CacheHost) Get(domain string) (*Record, error) {
 	recordString, ok := host.store.Get(domain)
 	if !ok {
-		return errors.New("Not found."), nil
+		Logger.Debugf("Domain %s not found in the memory cache.", domain)
+		return nil, errors.New("Not found.")
 	}
 	var record Record
 	err := json.Unmarshal([]byte(recordString.(string)), &record)
 	if err != nil {
-		return err, nil
+		Logger.Debugf("Domain record %s unmarshal failed.", domain)
+		return nil, err
 	}
-	return nil, &record
+	return &record, nil
 }
 
+//Set Set host with given Record
 func (host *CacheHost) Set(domain string, record *Record) error {
 	recordBytes, err := json.Marshal(record)
 	if err != nil {
+		Logger.Debugf("Domain record %s set failed.%#v", domain, record)
 		return err
 	}
 
@@ -39,6 +46,7 @@ func (host *CacheHost) Set(domain string, record *Record) error {
 	return nil
 }
 
+//Refresh Refresh the cached records
 func (host *CacheHost) Refresh() {
 	panic("Not implement yet.")
 }

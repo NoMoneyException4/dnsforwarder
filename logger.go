@@ -1,9 +1,7 @@
-package logger
+package main
 
 import (
 	"os"
-
-	"github.com/codebear4/dnsforwarder/conf"
 
 	"github.com/op/go-logging"
 )
@@ -22,21 +20,21 @@ func InitLogger() {
 	Logger = logging.MustGetLogger("dnsforwarder")
 	loggers := make([]logging.Backend, 0)
 
-	if conf.Conf.Loggers.Console.Enable {
+	if Conf.Loggers.Console.Enable {
 		consoleBackend := logging.NewLogBackend(os.Stderr, "DnsForwarder", 0)
 		consoleFormatter := logging.NewBackendFormatter(consoleBackend, format)
 		loggers = append(loggers, consoleFormatter)
 	}
 
-	if conf.Conf.Loggers.File.Enable {
-		logfile, err := os.OpenFile(conf.Conf.Loggers.File.Path, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
+	if Conf.Loggers.File.Enable {
+		logfile, err := os.OpenFile(Conf.Loggers.File.Path, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
 		if err != nil {
 			panic(err)
 		}
 		fileBackend := logging.NewLogBackend(logfile, "", 0)
 		fileFormatter := logging.NewBackendFormatter(fileBackend, fileFormat)
 		fileBackendLeveld := logging.AddModuleLevel(fileFormatter)
-		level, err := logging.LogLevel(conf.Conf.Loggers.File.Level)
+		level, err := logging.LogLevel(Conf.Loggers.File.Level)
 		if err != nil {
 			panic(err)
 		}

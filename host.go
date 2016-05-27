@@ -1,13 +1,15 @@
-package resolver
+package main
 
 import (
 	"net"
 	"regexp"
 )
 
+//Host Base Host
 type Host struct {
 }
 
+//isDomain Determine the given host is valid
 func (host *Host) isDomain(domain string) bool {
 	if host.isIP(domain) {
 		return false
@@ -16,6 +18,7 @@ func (host *Host) isDomain(domain string) bool {
 	return match
 }
 
+//isIP Determine the given ip is valid
 func (host *Host) isIP(ip string) bool {
 	return (net.ParseIP(ip) != nil)
 }

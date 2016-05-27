@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"net"
@@ -23,9 +23,9 @@ func (s *Server) Listen() {
 }
 
 func (s *Server) start(ds *dns.Server) {
-	logger.Info("Start %s server listening on %s", ds.Net, s.Addr())
+	Logger.Info("Start %s server listening on %s", ds.Net, s.Addr())
 	err := ds.ListenAndServe()
 	if err != nil {
-		logger.Error("Start %s server failed:%s", ds.Net, err.Error())
+		Logger.Error("Start %s server failed:%s", ds.Net, err.Error())
 	}
 }

@@ -1,4 +1,4 @@
-package resolver
+package main
 
 import (
 	"bufio"
@@ -6,17 +6,16 @@ import (
 	"net"
 	"os"
 	"strings"
-
-	. "github.com/codebear4/dnsforwarder/conf"
-	. "github.com/codebear4/dnsforwarder/logger"
 )
 
+//FileHost File based host resolver
 type FileHost struct {
 	files []string
 	hosts map[string][]net.IP
 	Host
 }
 
+//NewFileHost New FileHost
 func NewFileHost() *FileHost {
 	host := &FileHost{
 		files: Conf.Hosts.Resolvs,
@@ -27,20 +26,23 @@ func NewFileHost() *FileHost {
 	return host
 }
 
-func (host *FileHost) Get(domain string) (error, *Record) {
+//Get Get host from cache
+func (host *FileHost) Get(domain string) (*Record, error) {
 	addrs, ok := host.hosts[domain]
 	if ok {
-		return nil, &Record{Domain: domain, Ttl: 0, Addrs: addrs}
+		return &Record{Domain: domain, Ttl: 0, Addrs: addrs}, nil
 	}
 	Logger.Debugf("Domain %s not found in hosts files.", domain)
-	return errors.New("Not found."), nil
+	return nil, errors.New("Not found.")
 }
 
+//Set Set host with given Record
 func (host *FileHost) Set(domain string, record *Record) error {
 	host.hosts[domain] = append(host.hosts[domain], record.Addrs...)
 	return nil
 }
 
+//Refresh Refresh the cached records
 func (host *FileHost) Refresh() {
 	for _, file := range host.files {
 		buf, err := os.OpenFile(file, os.O_RDONLY, 0777)

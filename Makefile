@@ -6,3 +6,5 @@ bootstrap:
 build:
 	@glide install
 
+test:
+	@go test -v ./...

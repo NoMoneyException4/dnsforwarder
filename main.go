@@ -3,10 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-
-	. "github.com/codebear4/dnsforwarder/conf"
-	. "github.com/codebear4/dnsforwarder/logger"
-	"github.com/codebear4/dnsforwarder/resolver"
+	"net"
 )
 
 func initial() {
@@ -21,10 +18,18 @@ func initial() {
 
 func main() {
 	initial()
-	fileHost := resolver.NewFileHost()
-	err, record := fileHost.Get("www.sipin.frank")
+	cacheHost := NewCacheHost()
+	record := &Record{
+		Domain: "www.sipin.frank",
+		Addrs:  []net.IP{net.ParseIP("119.29.29.29")},
+		Ttl:    0,
+	}
+	cacheHost.Set("www.sipin.frank", record)
+	record, err := cacheHost.Get("www.sipin.frank")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%#v", record)
+	for _, ip := range record.Addrs {
+		fmt.Println(ip.String())
+	}
 }
