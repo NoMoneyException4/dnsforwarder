@@ -15,8 +15,14 @@ type configuration struct {
 		TTL    int
 	}
 	Timeout struct {
-		Read  int
-		Write int
+		Server struct {
+			Read  int
+			Write int
+		}
+		Forwarder struct {
+			Read  int
+			Write int
+		}
 	}
 	Hosts struct {
 		Enable  bool

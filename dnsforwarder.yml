@@ -9,8 +9,12 @@ loggers:
     level: debug #Also in these values: debug info notice warning error critical
     path: /tmp/dnsforwarder.log
 timeout:
-    read: 200 #Timeout for read from upstreams
-    write: 200 #Timeout for write data to request clients
+  server: #Timeout for server
+    read: 200
+    write: 200
+  forwarder: #Timeout for forwarder
+    read: 2000
+    write: 2000
 hosts:
     enable: true #Enable hosts file support
     resolvs:

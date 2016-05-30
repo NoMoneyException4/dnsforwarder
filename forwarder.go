@@ -51,13 +51,15 @@ func lookupWithSpecifyServer(net string, req *dns.Msg, server string, result cha
 
 	client := &dns.Client{
 		Net:          net,
-		ReadTimeout:  time.Duration(Conf.Timeout.Read) * time.Millisecond,
-		WriteTimeout: time.Duration(Conf.Timeout.Write) * time.Millisecond,
+		ReadTimeout:  time.Duration(Conf.Timeout.Forwarder.Read) * time.Millisecond,
+		WriteTimeout: time.Duration(Conf.Timeout.Forwarder.Write) * time.Millisecond,
 	}
 
 	resp, rtt, exchangeError := client.Exchange(req, server)
 	if exchangeError != nil {
 		Logger.Error(exchangeError)
+		err <- exchangeError
+		return
 	}
 	if resp != nil && resp.Rcode == dns.RcodeServerFailure {
 		Logger.Warningf("%s failed to get an valid code on %s", domain, server)
@@ -81,13 +83,15 @@ func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
 	for _, server := range f.upstreams[net] {
 		go lookupWithSpecifyServer(net, req, server, result, err)
 	}
-	ticker := time.NewTicker(time.Duration(Conf.Timeout.Read) * time.Millisecond)
+	ticker := time.NewTicker(time.Duration(Conf.Timeout.Forwarder.Read) * time.Millisecond)
 	defer ticker.Stop()
 	for {
 		select {
 		case r := <-result:
 			// Logger.Debugf("<-result %#v", r)
 			return r, nil
+		case e := <-err:
+			return nil, e
 		case <-ticker.C:
 			return nil, errors.New("TIME OUT!")
 		default:
