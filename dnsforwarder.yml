@@ -5,23 +5,24 @@ cache:
 loggers:
   console:
     enable: true
-    level: warning
+    level: debug
   file:
     enable: true
     level: warning #Also in these values: debug info notice warning error critical
     path: /tmp/dnsforwarder.log
 timeout:
   server: #Timeout for server
-    read: 20
-    write: 20
+    read: 200
+    write: 200
   forwarder: #Timeout for forwarder
-    read: 100
-    write: 100
+    read: 200
+    write: 200
 hosts:
     enable: true #Enable hosts file support
     resolvs:
         - /etc/hosts
 upstreams:
     - "tcp://114.114.114.114:53"
-    - "udp://114.114.115.115:53"
+    - "udp://114.114.114.114:53"
+    - "udp://119.29.29.29:53"
 

@@ -58,6 +58,7 @@ func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
 					TTL:     msg.Answer[0].Header().Ttl,
 					Answers: msg.Answer,
 				})
+				Logger.Infof("Domain %s cached.", question.Name)
 			}
 			w.WriteMsg(msg)
 			return
@@ -75,7 +76,7 @@ func (h *Handler) HandleTCP(w dns.ResponseWriter, req *dns.Msg) {
 
 //HandleUDP Handle UDP conn
 func (h *Handler) HandleUDP(w dns.ResponseWriter, req *dns.Msg) {
-	h.handle("tcp", w, req)
+	h.handle("udp", w, req)
 }
 
 func (h *Handler) buildRRHeader(name string, qtype uint16, ttl uint32) dns.RR_Header {
