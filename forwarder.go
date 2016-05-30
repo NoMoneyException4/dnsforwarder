@@ -46,16 +46,15 @@ func parseUpstream(upstream string) (net, server string, err error) {
 	return
 }
 
-func lookupWithSpecifyServer(net string, req *dns.Msg, server string, result chan *dns.Msg, err chan error) {
+func (f *Forwarder) lookup(net string, req *dns.Msg, server string, result chan *dns.Msg, err chan error) {
 	domain := req.Question[0].Name
-	Logger.Debugf("Looking up %s with %s ...\n", domain, server)
+	Logger.Debugf("Looking up %s with %s.", domain, server)
 
 	client := &dns.Client{
 		Net:          net,
-		ReadTimeout:  time.Duration(Conf.Timeout.Forwarder.Read) * time.Millisecond,
+		DialTimeout:  time.Duration(Conf.Timeout.Forwarder.Read) * time.Millisecond,
 		WriteTimeout: time.Duration(Conf.Timeout.Forwarder.Write) * time.Millisecond,
 	}
-
 	resp, rtt, exchangeError := client.Exchange(req, server)
 	if exchangeError != nil {
 		Logger.Error(exchangeError)
@@ -86,14 +85,17 @@ func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
 	err := make(chan error, 1)
 
 	for _, server := range f.upstreams[net] {
-		go lookupWithSpecifyServer(net, req, server, result, err)
+		go f.lookup(net, req, server, result, err)
 	}
+
 	for {
 		select {
 		case r := <-result:
 			return r, nil
 		case e := <-err:
 			return nil, e
+		case <-time.After(10 * time.Millisecond):
+			return nil, errors.New("Lookup" + req.Question[0].Name + " is timing out")
 		default:
 		}
 	}

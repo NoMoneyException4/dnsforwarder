@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/mailgun/cfg"
 )
 
@@ -32,6 +34,7 @@ type configuration struct {
 	Loggers   struct {
 		Console struct {
 			Enable bool
+			Level  string
 		}
 		File struct {
 			Enable bool
@@ -48,5 +51,7 @@ func LoadConf(path string) {
 
 	if err != nil {
 		panic(err)
+	} else {
+		log.Printf("Started with conf: %#v", Conf)
 	}
 }

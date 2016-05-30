@@ -14,12 +14,14 @@ var (
 	confFilePath string
 	listenHost   string
 	listenPort   string
+	debug        bool
 )
 
 func initial() {
 	flag.StringVar(&confFilePath, "c", "dnsforwarder.yml", "Configuration file path.")
 	flag.StringVar(&listenHost, "h", "", "Listening host.")
 	flag.StringVar(&listenPort, "p", "53", "Listening port.")
+	flag.BoolVar(&debug, "d", false, "Debug Mode")
 	flag.Parse()
 
 	LoadConf(confFilePath)
@@ -27,10 +29,17 @@ func initial() {
 }
 
 func main() {
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
 	initial()
+
+	if debug {
+		log.Println("Enable debug mode")
+		go func() {
+			log.Println(http.ListenAndServe("localhost:6060", nil))
+		}()
+	} else {
+		log.Println("Disable debug mode")
+	}
+
 	server := NewServer(
 		listenHost,
 		listenPort,

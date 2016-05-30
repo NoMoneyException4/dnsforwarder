@@ -1,20 +1,22 @@
+udpOverTcp: false
 cache:
   enable: true
   ttl: 3600
 loggers:
   console:
     enable: true
+    level: warning
   file:
     enable: true
-    level: debug #Also in these values: debug info notice warning error critical
+    level: warning #Also in these values: debug info notice warning error critical
     path: /tmp/dnsforwarder.log
 timeout:
   server: #Timeout for server
-    read: 200
-    write: 200
+    read: 20
+    write: 20
   forwarder: #Timeout for forwarder
-    read: 200
-    write: 200
+    read: 100
+    write: 100
 hosts:
     enable: true #Enable hosts file support
     resolvs:

@@ -10,10 +10,10 @@ var (
 	//Logger Global logger
 	Logger *logging.Logger
 	format = logging.MustStringFormatter(
-		`%{color} %{longfunc} %{level} %{time:2006-01-02 15:04:05}:%{color:reset} %{message}`,
+		`%{color}%{time:2006/01/02 15:04:05}:%{longfunc} %{level}: %{message} %{color:reset}`,
 	)
 	fileFormat = logging.MustStringFormatter(
-		`%{longfunc} %{level} %{time:2006-01-02 15:04:05}: %{message}`,
+		`%{longfunc} %{level} %{time:2006/01/02 15:04:05}: %{message}`,
 	)
 )
 
@@ -23,9 +23,15 @@ func InitLogger() {
 	var loggers []logging.Backend
 
 	if Conf.Loggers.Console.Enable {
-		consoleBackend := logging.NewLogBackend(os.Stderr, "DnsForwarder", 0)
+		consoleBackend := logging.NewLogBackend(os.Stderr, "", 0)
 		consoleFormatter := logging.NewBackendFormatter(consoleBackend, format)
-		loggers = append(loggers, consoleFormatter)
+		consoleBackendLeveled := logging.AddModuleLevel(consoleFormatter)
+		level, err := logging.LogLevel(Conf.Loggers.Console.Level)
+		if err != nil {
+			panic(err)
+		}
+		consoleBackendLeveled.SetLevel(level, "")
+		loggers = append(loggers, consoleBackendLeveled)
 	}
 
 	if Conf.Loggers.File.Enable {
