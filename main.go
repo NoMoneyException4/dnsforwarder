@@ -2,6 +2,9 @@ package main
 
 import (
 	"flag"
+	"log"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"time"
@@ -24,8 +27,16 @@ func initial() {
 }
 
 func main() {
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 	initial()
-	server := NewServer(listenHost, listenPort, time.Duration(Conf.Timeout.Read)*time.Millisecond, time.Duration(Conf.Timeout.Write)*time.Millisecond)
+	server := NewServer(
+		listenHost,
+		listenPort,
+		time.Duration(Conf.Timeout.Server.Read)*time.Millisecond,
+		time.Duration(Conf.Timeout.Server.Write)*time.Millisecond,
+	)
 	server.Listen()
 
 	sig := make(chan os.Signal)

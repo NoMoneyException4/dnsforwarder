@@ -41,7 +41,7 @@ func (host *FileHost) Get(domain string) (*Record, error) {
 
 //Set Set host with given Record
 func (host *FileHost) Set(domain string, record *Record) error {
-	host.hosts[domain] = append(host.hosts[domain], record.Addrs...)
+	// host.hosts[domain] = append(host.hosts[domain], record.Addrs...)
 	return nil
 }
 

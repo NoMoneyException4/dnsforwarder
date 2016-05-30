@@ -64,6 +64,26 @@ func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
 		w.WriteMsg(m)
 		return
 	}
+
+	record = &Record{
+		Domain: question.Name,
+		TTL:    0,
+	}
+	for _, answer := range resp.Answer {
+		if int(answer.Header().Ttl) > record.TTL {
+			record.TTL = int(answer.Header().Ttl)
+		}
+		switch answer.(type) {
+		case *dns.A:
+			record.Addrs = append(record.Addrs, answer.(*dns.A).A)
+		case *dns.AAAA:
+			record.Addrs = append(record.Addrs, answer.(*dns.AAAA).AAAA)
+		default:
+			Logger.Errorf("Unsupport type: %#v", answer)
+		}
+	}
+
+	h.resolver.Persist(question.Name, record)
 	w.WriteMsg(resp)
 	return
 }

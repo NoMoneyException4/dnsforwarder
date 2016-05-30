@@ -43,3 +43,14 @@ func (r *Resolver) Lookup(domain string) (*Record, error) {
 	}
 	return nil, errors.New("Cannot resolv the given domain by resolv providers.")
 }
+
+//Persist Persist the record from upstreams
+func (r *Resolver) Persist(domain string, record *Record) error {
+	for _, provider := range r.providers {
+		err := provider.Set(domain, record)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
