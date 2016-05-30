@@ -51,16 +51,20 @@ func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
 			return
 		}
 		if msg, err := h.forwarder.Lookup(req, net); err == nil {
-			h.cacheResolver.Set(question.Name, &Record{
-				Domain:  question.Name,
-				Type:    question.Qtype,
-				TTL:     msg.Answer[0].Header().Ttl,
-				Answers: msg.Answer,
-			})
+			if len(msg.Answer) > 0 {
+				h.cacheResolver.Set(question.Name, &Record{
+					Domain:  question.Name,
+					Type:    question.Qtype,
+					TTL:     msg.Answer[0].Header().Ttl,
+					Answers: msg.Answer,
+				})
+			}
 			w.WriteMsg(msg)
 			return
+		} else {
+			// Logger.Error(err)
+			dns.HandleFailed(w, req)
 		}
-		dns.HandleFailed(w, req)
 	}
 }
 
@@ -71,7 +75,7 @@ func (h *Handler) HandleTCP(w dns.ResponseWriter, req *dns.Msg) {
 
 //HandleUDP Handle UDP conn
 func (h *Handler) HandleUDP(w dns.ResponseWriter, req *dns.Msg) {
-	h.handle("udp", w, req)
+	h.handle("tcp", w, req)
 }
 
 func (h *Handler) buildRRHeader(name string, qtype uint16, ttl uint32) dns.RR_Header {

@@ -62,18 +62,19 @@ func (f *Forwarder) lookup(net string, req *dns.Msg, server string, result chan 
 		return
 	}
 	if resp != nil && resp.Rcode == dns.RcodeServerFailure {
-		eStr := fmt.Sprintf("%s failed to get an valid code on %s", domain, server)
+		eStr := fmt.Sprintf("%s failed to get an valid record from upstream %s", domain, server)
 		Logger.Warning(eStr)
 		err <- errors.New(eStr)
 		return
 	}
 
-	if resp == nil || resp.Rcode != dns.RcodeSuccess || len(resp.Answer) == 0 {
-		eStr := fmt.Sprintf("%s failed to get an valid answer on %s", domain, server)
-		Logger.Warning(eStr)
-		err <- errors.New(eStr)
-		return
-	}
+	// if resp == nil || resp.Rcode != dns.RcodeSuccess || len(resp.Answer) == 0 {
+	// eStr := fmt.Sprintf("%s failed to get an valid answer on %s", domain, server)
+	// Logger.Errorf("%#v", resp.Ns[0].String())
+	// Logger.Warning(eStr)
+	// err <- errors.New(eStr)
+	// return
+	// }
 	Logger.Debugf("%s resolv on %s (%s) ttl: %d.", domain, server, net, rtt)
 	result <- resp
 	return
@@ -88,13 +89,16 @@ func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
 		go f.lookup(net, req, server, result, err)
 	}
 
+	ticker := time.NewTicker(100 * time.Millisecond)
+	defer ticker.Stop()
+
 	for {
 		select {
 		case r := <-result:
 			return r, nil
 		case e := <-err:
 			return nil, e
-		case <-time.After(10 * time.Millisecond):
+		case <-ticker.C:
 			return nil, errors.New("Lookup" + req.Question[0].Name + " is timing out")
 		default:
 		}
