@@ -1,12 +1,13 @@
 package main
 
 import (
-	"net"
+	"github.com/miekg/dns"
 )
 
-//Record Query Record
+//Record Cache record
 type Record struct {
-	Domain string
-	Addrs  []net.IP
-	TTL    int
+	Domain  string
+	Type    uint16
+	TTL     uint32
+	Answers []dns.RR
 }

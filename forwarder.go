@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -46,7 +47,7 @@ func parseUpstream(upstream string) (net, server string, err error) {
 }
 
 func lookupWithSpecifyServer(net string, req *dns.Msg, server string, result chan *dns.Msg, err chan error) {
-	domain := req.Question[0].String()
+	domain := req.Question[0].Name
 	Logger.Debugf("Looking up %s with %s ...\n", domain, server)
 
 	client := &dns.Client{
@@ -62,12 +63,16 @@ func lookupWithSpecifyServer(net string, req *dns.Msg, server string, result cha
 		return
 	}
 	if resp != nil && resp.Rcode == dns.RcodeServerFailure {
-		Logger.Warningf("%s failed to get an valid code on %s", domain, server)
+		eStr := fmt.Sprintf("%s failed to get an valid code on %s", domain, server)
+		Logger.Warning(eStr)
+		err <- errors.New(eStr)
 		return
 	}
 
 	if resp == nil || resp.Rcode != dns.RcodeSuccess || len(resp.Answer) == 0 {
-		Logger.Warningf("%s failed to get an valid answer on %s", domain, server)
+		eStr := fmt.Sprintf("%s failed to get an valid answer on %s", domain, server)
+		Logger.Warning(eStr)
+		err <- errors.New(eStr)
 		return
 	}
 	Logger.Debugf("%s resolv on %s (%s) ttl: %d.", domain, server, net, rtt)
@@ -83,17 +88,12 @@ func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
 	for _, server := range f.upstreams[net] {
 		go lookupWithSpecifyServer(net, req, server, result, err)
 	}
-	ticker := time.NewTicker(time.Duration(Conf.Timeout.Forwarder.Read) * time.Millisecond)
-	defer ticker.Stop()
 	for {
 		select {
 		case r := <-result:
-			// Logger.Debugf("<-result %#v", r)
 			return r, nil
 		case e := <-err:
 			return nil, e
-		case <-ticker.C:
-			return nil, errors.New("TIME OUT!")
 		default:
 		}
 	}

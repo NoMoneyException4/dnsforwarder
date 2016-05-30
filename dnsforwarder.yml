@@ -13,16 +13,13 @@ timeout:
     read: 200
     write: 200
   forwarder: #Timeout for forwarder
-    read: 2000
-    write: 2000
+    read: 200
+    write: 200
 hosts:
     enable: true #Enable hosts file support
     resolvs:
         - /etc/hosts
 upstreams:
-    - "tcp://8.8.8.8:53"
-    - "tcp://119.29.29.29:53"
-    - "udp://8.8.8.8:53"
-    - "udp://8.8.4.4:53"
-    - "udp://119.29.29.29:53"
+    - "tcp://114.114.114.114:53"
+    - "udp://114.114.115.115:53"
 
