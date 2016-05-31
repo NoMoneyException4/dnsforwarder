@@ -7,6 +7,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -32,12 +33,12 @@ func main() {
 	initial()
 
 	if debug {
-		log.Println("Enable debug mode")
+		log.Println("Enabled debug mode")
 		go func() {
 			log.Println(http.ListenAndServe("localhost:6060", nil))
 		}()
 	} else {
-		log.Println("Disable debug mode")
+		log.Println("Disabled debug mode")
 	}
 
 	server := NewServer(
@@ -49,7 +50,7 @@ func main() {
 	server.Listen()
 
 	sig := make(chan os.Signal)
-	signal.Notify(sig, os.Interrupt)
+	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 
 forever:
 	for {
