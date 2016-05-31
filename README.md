@@ -18,9 +18,11 @@ $ go get -u -v github.com/codebear4/dnsforwarder
 
 #### Configuration
 `udpOverTcp`: If set it to `true`, server will use `TCP` connection with upstreams even the request from      client is `UDP` request.
+
 `cache`:
 * `enable`: Enable or disable in-memory cache
 * `ttl`: Default TTL for cache
+
 `loggers`:
 * `console`:
     * `enable`: Enable or disable console logger
@@ -29,6 +31,7 @@ $ go get -u -v github.com/codebear4/dnsforwarder
     * `enable`: Enable or disable file logger
     * `level`: Log level for file logger
     * `path`: Log file path
+
 `timeout`:
 * `server`:
     * `read`: Timeout for read from clients
@@ -36,9 +39,11 @@ $ go get -u -v github.com/codebear4/dnsforwarder
 * `forwarder`:
     * `read`: Timeout for read from upstreams
     * `write`: Timeout for write to upstreams
+
 `host`:
 * `enable`: Resolve with hosts files
 * `resolvs`: Hosts files list
+
 `upstreams`: List of upstream dns servers
 
 #### Running
