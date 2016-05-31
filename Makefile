@@ -13,12 +13,14 @@ build:
 clean:
 	rm -rf dnsforwarder
 	rm -rf dnsforwarder_*
-	rm -rf *.deb
+	rm -rf *.deb *.rpm
 
 package-bootstrap:
-	@brew install gnu-tar
 	sudo gem install fpm
 	go get -u -v github.com/mitchellh/gox
 
-package: build
+deb: clean build
 	fpm -s dir -t deb -n dnsforwarder -v 1.0.1 ./dnsforwarder.yml=/etc/dnsforwarder.yml ./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder
+
+rpm: clean build
+	fpm -s dir -t rpm -n dnsforwarder -v 1.0.1 ./dnsforwarder.yml=/etc/dnsforwarder.yml ./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder
