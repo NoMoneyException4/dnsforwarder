@@ -48,12 +48,11 @@ func parseUpstream(upstream string) (net, server string, err error) {
 
 //Lookup Lookup the given domain with upstreams
 func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
-	result := make(chan *dns.Msg)
+	result := make(chan *dns.Msg, len(f.upstreams[net]))
 	err := make(chan error, 1)
 
 	var wg sync.WaitGroup
 	lookup := func(net string, req *dns.Msg, server string, result chan *dns.Msg, err chan error) {
-		defer wg.Done()
 		domain := req.Question[0].Name
 		Logger.Debugf("Looking up %s with %s.", domain, server)
 
@@ -62,29 +61,23 @@ func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
 			DialTimeout:  time.Duration(Conf.Timeout.Forwarder.Read) * time.Millisecond * 10,
 			WriteTimeout: time.Duration(Conf.Timeout.Forwarder.Write) * time.Millisecond * 10,
 		}
-		resp, rtt, lookupError := client.Exchange(req, server)
+		resp, _, lookupError := client.Exchange(req, server)
 		if lookupError != nil {
-			Logger.Error(lookupError)
 			return
 		}
 		if resp != nil && resp.Rcode == dns.RcodeServerFailure {
 			Logger.Warningf("%s failed to get an valid record from upstream %s", domain, server)
 			return
 		}
-		select {
-		case result <- resp:
-			Logger.Debugf("%s resolv on %s (%s) ttl: %d.", domain, server, net, rtt)
-		default:
-		}
+
+		wg.Done()
+		result <- resp
 	}
 
 	for _, server := range f.upstreams[net] {
 		wg.Add(1)
 		go lookup(net, req, server, result, err)
 	}
-
-	ticker := time.NewTicker(10 * time.Millisecond)
-	defer ticker.Stop()
 
 	wg.Wait()
 	for {
@@ -93,9 +86,6 @@ func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
 			return r, nil
 		case e := <-err:
 			return nil, e
-		case <-ticker.C:
-			return nil, errors.New("Lookup" + req.Question[0].Name + " is timing out")
-		default:
 		}
 	}
 }

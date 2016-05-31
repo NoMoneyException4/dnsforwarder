@@ -63,7 +63,6 @@ func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
 			w.WriteMsg(msg)
 			return
 		} else {
-			// Logger.Error(err)
 			dns.HandleFailed(w, req)
 		}
 	}

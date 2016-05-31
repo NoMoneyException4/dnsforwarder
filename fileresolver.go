@@ -35,7 +35,6 @@ func (host *FileResolver) Get(domain string) ([]string, error) {
 		Logger.Debugf("[HitHost] Domain %s found in hosts files.", domain)
 		return addrs, nil
 	}
-	Logger.Debugf("Domain %s not found in hosts files.", domain)
 	return nil, errors.New("Not found.")
 }
 
