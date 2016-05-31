@@ -12,8 +12,8 @@ var (
 )
 
 type configuration struct {
-	UdpOverTcp bool
-	Cache      struct {
+	ForceTcp bool
+	Cache    struct {
 		Enable bool
 		TTL    uint32
 	}

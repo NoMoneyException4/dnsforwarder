@@ -1,4 +1,4 @@
-udpOverTcp: false
+forcetcp: true
 cache:
   enable: true
   ttl: 3600
