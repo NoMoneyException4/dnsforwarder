@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -54,7 +53,7 @@ func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
 
 	var wg sync.WaitGroup
 	lookup := func(net string, req *dns.Msg, server string, result chan *dns.Msg, err chan error) {
-		wg.Done()
+		defer wg.Done()
 		domain := req.Question[0].Name
 		Logger.Debugf("Looking up %s with %s.", domain, server)
 
@@ -63,22 +62,20 @@ func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
 			DialTimeout:  time.Duration(Conf.Timeout.Forwarder.Read) * time.Millisecond * 10,
 			WriteTimeout: time.Duration(Conf.Timeout.Forwarder.Write) * time.Millisecond * 10,
 		}
-		resp, rtt, exchangeError := client.Exchange(req, server)
-		if exchangeError != nil {
-			Logger.Error(exchangeError)
-			err <- exchangeError
+		resp, rtt, lookupError := client.Exchange(req, server)
+		if lookupError != nil {
+			Logger.Error(lookupError)
 			return
 		}
 		if resp != nil && resp.Rcode == dns.RcodeServerFailure {
-			eStr := fmt.Sprintf("%s failed to get an valid record from upstream %s", domain, server)
-			Logger.Warning(eStr)
-			err <- errors.New(eStr)
+			Logger.Warningf("%s failed to get an valid record from upstream %s", domain, server)
 			return
 		}
-
-		Logger.Debugf("%s resolv on %s (%s) ttl: %d.", domain, server, net, rtt)
-		result <- resp
-		return
+		select {
+		case result <- resp:
+			Logger.Debugf("%s resolv on %s (%s) ttl: %d.", domain, server, net, rtt)
+		default:
+		}
 	}
 
 	for _, server := range f.upstreams[net] {
