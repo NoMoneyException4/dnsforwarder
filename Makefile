@@ -1,4 +1,5 @@
-VERSION := $(shell git rev-parse --short HEAD)-$(shell date '+%Y%m%d')
+NAME=dnsforwarder
+VERSION := $(shell git rev-parse --short HEAD)_$(shell date '+%Y%m%d')
 
 bootstrap:
 	go get -u -v github.com/Masterminds/glide
@@ -8,7 +9,7 @@ test:
 	go test -v
 
 build:
-	gox -osarch="linux/amd64"
+	gox -osarch="darwin/amd64 linux/amd64" -ldflags="-X main.version=${VERSION} -w -s"
 
 clean:
 	rm -rf dnsforwarder
@@ -20,7 +21,7 @@ package-bootstrap:
 	go get -u -v github.com/mitchellh/gox
 
 deb: clean build
-	fpm -s dir -t deb -n dnsforwarder -v 1.0.1 ./dnsforwarder.yml=/etc/dnsforwarder.yml ./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder
+	fpm -s dir -t deb -n ${NAME} -v ${VERSION} ./dnsforwarder.yml=/etc/dnsforwarder.yml ./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder
 
 rpm: clean build
-	fpm -s dir -t rpm -n dnsforwarder -v 1.0.1 ./dnsforwarder.yml=/etc/dnsforwarder.yml ./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder
+	fpm -s dir -t rpm -n ${NAME} -v ${VERSION} ./dnsforwarder.yml=/etc/dnsforwarder.yml ./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder

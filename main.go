@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
@@ -12,6 +13,8 @@ import (
 )
 
 var (
+	version string
+
 	confFilePath string
 	listenHost   string
 	listenPort   string
@@ -23,6 +26,10 @@ func initial() {
 	flag.StringVar(&listenHost, "h", "", "Listening host.")
 	flag.StringVar(&listenPort, "p", "53", "Listening port.")
 	flag.BoolVar(&debug, "d", false, "Debug Mode")
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "DnsForwarder version %s\n", version)
+		flag.PrintDefaults()
+	}
 	flag.Parse()
 
 	LoadConf(confFilePath)
