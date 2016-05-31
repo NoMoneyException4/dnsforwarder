@@ -7,6 +7,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -49,7 +50,7 @@ func main() {
 	server.Listen()
 
 	sig := make(chan os.Signal)
-	signal.Notify(sig, os.Interrupt)
+	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 
 forever:
 	for {
