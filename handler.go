@@ -51,15 +51,19 @@ func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
 			return
 		}
 		if msg, err := h.forwarder.Lookup(req, net); err == nil {
+			ttl := uint32(0)
 			if len(msg.Answer) > 0 {
-				h.cacheResolver.Set(question.Name, &Record{
-					Domain:  question.Name,
-					Type:    question.Qtype,
-					TTL:     msg.Answer[0].Header().Ttl,
-					Answers: msg.Answer,
-				})
-				Logger.Infof("Domain %s cached.", question.Name)
+				ttl = msg.Answer[0].Header().Ttl
+			} else {
+				ttl = Conf.Cache.TTL
 			}
+			h.cacheResolver.Set(question.Name, &Record{
+				Domain:  question.Name,
+				Type:    question.Qtype,
+				TTL:     ttl,
+				Answers: msg.Answer,
+			})
+			Logger.Infof("Domain %s cached.", question.Name)
 			w.WriteMsg(msg)
 			return
 		} else {
