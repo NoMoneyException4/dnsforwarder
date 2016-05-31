@@ -22,7 +22,6 @@ func NewCacheResolver() *CacheResolver {
 func (host *CacheResolver) Get(domain string) (*Record, error) {
 	record, ok := host.store.Get(domain)
 	if !ok {
-		Logger.Debugf("Domain %s not found in the memory cache.", domain)
 		return nil, errors.New("Not found.")
 	}
 	Logger.Debugf("[HitCache] Get record of domain %s from cache.", domain)
