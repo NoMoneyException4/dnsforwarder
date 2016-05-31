@@ -17,7 +17,7 @@ clean:
 	rm -rf *.deb *.rpm
 
 package-bootstrap:
-	sudo gem install fpm
+	sudo gem install fpm --no-ri --no-rdoc
 	go get -u -v github.com/mitchellh/gox
 
 deb: clean build
