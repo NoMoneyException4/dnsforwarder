@@ -51,3 +51,8 @@ $ go get -u -v github.com/codebear4/dnsforwarder
 $ sudo dnsforwarder
 ```
 
+## TODO
+* Cache persistence
+* Packaging
+* Hot-reload
+
