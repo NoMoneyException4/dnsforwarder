@@ -32,12 +32,12 @@ func main() {
 	initial()
 
 	if debug {
-		log.Println("Enable debug mode")
+		log.Println("Enabled debug mode")
 		go func() {
 			log.Println(http.ListenAndServe("localhost:6060", nil))
 		}()
 	} else {
-		log.Println("Disable debug mode")
+		log.Println("Disabled debug mode")
 	}
 
 	server := NewServer(

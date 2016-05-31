@@ -76,7 +76,11 @@ func (h *Handler) HandleTCP(w dns.ResponseWriter, req *dns.Msg) {
 
 //HandleUDP Handle UDP conn
 func (h *Handler) HandleUDP(w dns.ResponseWriter, req *dns.Msg) {
-	h.handle("udp", w, req)
+	if Conf.UdpOverTcp {
+		h.handle("tcp", w, req)
+	} else {
+		h.handle("udp", w, req)
+	}
 }
 
 func (h *Handler) buildRRHeader(name string, qtype uint16, ttl uint32) dns.RR_Header {
