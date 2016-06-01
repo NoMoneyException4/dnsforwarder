@@ -33,4 +33,11 @@ deb: clean build
 		./scripts/init.d/dnsforwarder=/etc/init.d/dnsforwarder
 
 rpm: clean build
-	fpm -s dir -t rpm -n ${NAME} -v ${VERSION} ./dnsforwarder.yml=/etc/dnsforwarder.yml ./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder
+	fpm -s dir -t rpm -n ${NAME} -v ${VERSION} -m "Frank Yang <codebear4@gmail.com>" --url https://github.com/codebear4/dnsforwarder \
+		--license MIT --vendor "Frank Yang" \
+		--after-install ./scripts/postinstall \
+		--after-remove ./scripts/postuninstall \
+		./dnsforwarder.yml=/etc/dnsforwarder.yml \
+		./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder \
+		./scripts/etc/dnsforwarder=/etc/default/dnsforwarder \
+		./scripts/init.d/dnsforwarder=/etc/init.d/dnsforwarder
