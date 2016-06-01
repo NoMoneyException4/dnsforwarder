@@ -11,10 +11,14 @@ A dns server, cacher, and forwarder.
 
 ## Getting started
 #### Installation
+##### Build from source
 Make sure you have a correctly configured Go installtion first, then:
 ```s
 $ go get -u -v github.com/codebear4/dnsforwarder
 ```
+
+##### Install with package
+Download packages from github releases page.
 
 #### Configuration
 `udpOverTcp`: If set it to `true`, server will use `TCP` connection with upstreams even the request from      client is `UDP` request.
@@ -47,12 +51,24 @@ $ go get -u -v github.com/codebear4/dnsforwarder
 `upstreams`: List of upstream dns servers
 
 #### Running
+
+##### Build from source
 ```s
 $ sudo dnsforwarder
 ```
 
+##### Package
+```s
+$ service dnsforwarder start # upstart
+$ systemctl start dnsforwarder #systemd
+```
+
+#### Testing
+```s
+$ dig domain.tld @your.server.ip
+```
+
 ## TODO
 * Cache persistence
-* Packaging
 * Hot-reload
 
