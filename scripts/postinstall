@@ -1,0 +1,4 @@
+#!/bin/bash
+chmod +x /etc/init.d/dnsforwarder
+chmod 755 /etc/dnsforwarder.yml
+update-rc.d dnsforwarder defaults > /dev/null

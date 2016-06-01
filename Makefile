@@ -1,5 +1,7 @@
 NAME=dnsforwarder
-VERSION := $(shell git rev-parse --short HEAD)_$(shell date '+%Y%m%d')
+TITLE=DnsForwarder
+BUILD := $(shell date '+%Y%m%d')
+VERSION=1.0.1-$(BUILD)
 
 bootstrap:
 	go get -u -v github.com/Masterminds/glide
@@ -21,7 +23,14 @@ package-bootstrap:
 	go get -u -v github.com/mitchellh/gox
 
 deb: clean build
-	fpm -s dir -t deb -n ${NAME} -v ${VERSION} ./dnsforwarder.yml=/etc/dnsforwarder.yml ./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder
+	fpm -s dir -t deb -n ${NAME} -v ${VERSION} -m "Frank Yang <codebear4@gmail.com>" --url https://github.com/codebear4/dnsforwarder \
+		--license MIT --vendor "Frank Yang" \
+		--after-install ./scripts/postinstall \
+		--after-remove ./scripts/postuninstall \
+		./dnsforwarder.yml=/etc/dnsforwarder.yml \
+		./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder \
+		./scripts/etc/dnsforwarder=/etc/default/dnsforwarder \
+		./scripts/init.d/dnsforwarder=/etc/init.d/dnsforwarder
 
 rpm: clean build
 	fpm -s dir -t rpm -n ${NAME} -v ${VERSION} ./dnsforwarder.yml=/etc/dnsforwarder.yml ./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder

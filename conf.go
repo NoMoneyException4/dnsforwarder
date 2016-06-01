@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/mailgun/cfg"
 )
 
@@ -52,7 +50,5 @@ func LoadConf(path string) {
 
 	if err != nil {
 		panic(err)
-	} else {
-		log.Printf("Started with conf: %#v", Conf)
 	}
 }

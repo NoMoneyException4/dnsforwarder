@@ -40,12 +40,9 @@ func main() {
 	initial()
 
 	if debug {
-		log.Println("Enabled debug mode")
 		go func() {
 			log.Println(http.ListenAndServe("localhost:6060", nil))
 		}()
-	} else {
-		log.Println("Disabled debug mode")
 	}
 
 	server := NewServer(
