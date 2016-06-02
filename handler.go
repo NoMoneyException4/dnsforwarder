@@ -51,19 +51,21 @@ func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
 			return
 		}
 		if msg, err := h.forwarder.Lookup(req, net); err == nil {
-			ttl := uint32(0)
-			if len(msg.Answer) > 0 {
-				ttl = msg.Answer[0].Header().Ttl
-			} else {
-				ttl = Conf.Cache.TTL
+			if h.isValidRecord(msg) {
+				ttl := uint32(0)
+				if len(msg.Answer) > 0 {
+					ttl = msg.Answer[0].Header().Ttl
+				} else {
+					ttl = Conf.Cache.TTL
+				}
+				h.cacheResolver.Set(question.Name, &Record{
+					Domain:  question.Name,
+					Type:    question.Qtype,
+					TTL:     ttl,
+					Answers: msg.Answer,
+				})
+				Logger.Infof("Domain %s cached.", question.Name)
 			}
-			h.cacheResolver.Set(question.Name, &Record{
-				Domain:  question.Name,
-				Type:    question.Qtype,
-				TTL:     ttl,
-				Answers: msg.Answer,
-			})
-			Logger.Infof("Domain %s cached.", question.Name)
 			w.WriteMsg(msg)
 			return
 		}
@@ -103,5 +105,21 @@ func (h *Handler) buildAnswer(header dns.RR_Header, target string) dns.RR {
 	default:
 		Logger.Errorf("Unsupport query: %#v", header)
 		return &dns.A{}
+	}
+}
+
+func (h *Handler) isValidRecord(msg *dns.Msg) bool {
+	if len(msg.Question) < 1 {
+		return false
+	}
+	question := msg.Question[0]
+	switch question.Qtype {
+	case dns.TypeA, dns.TypeAAAA:
+		if len(msg.Answer) < 1 {
+			return false
+		}
+		return true
+	default:
+		return true
 	}
 }
