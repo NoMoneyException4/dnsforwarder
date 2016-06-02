@@ -1,7 +1,7 @@
 NAME=dnsforwarder
 TITLE=DnsForwarder
 BUILD := $(shell date '+%Y%m%d')
-VERSION=1.0.2-$(BUILD)
+VERSION=1.0.3-$(BUILD)
 
 bootstrap:
 	go get -u -v github.com/Masterminds/glide
