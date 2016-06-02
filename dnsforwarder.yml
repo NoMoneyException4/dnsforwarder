@@ -18,11 +18,11 @@ timeout:
     read: 200
     write: 200
 hosts:
-    enable: true #Enable hosts file support
-    resolvs:
-        - /etc/hosts
+  enable: true #Enable hosts file support
+  resolvs:
+    - /etc/hosts
 upstreams:
-    - "tcp://114.114.114.114:53"
-    - "udp://114.114.114.114:53"
-    - "udp://119.29.29.29:53"
+  - "tcp://114.114.114.114:53"
+  - "udp://114.114.114.114:53"
+  - "udp://119.29.29.29:53"
 
