@@ -21,7 +21,7 @@ $ go get -u -v github.com/codebear4/dnsforwarder
 Download packages from github releases page.
 
 #### Configuration
-`udpOverTcp`: If set it to `true`, server will use `TCP` connection with upstreams even the request from      client is `UDP` request.
+`forcetcp`: If set it to `true`, server will use `TCP` connection with upstreams even the request from      client is `UDP` request.
 
 `cache`:
 * `enable`: Enable or disable in-memory cache
@@ -70,5 +70,6 @@ $ dig domain.tld @your.server.ip
 
 ## TODO
 * Cache persistence
+* ~~Packaging~~
 * Hot-reload
 
