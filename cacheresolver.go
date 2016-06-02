@@ -12,7 +12,7 @@ type CacheResolver struct {
 	store *ttlcache.Cache
 }
 
-//NewCacheHost New CacheResolver
+//NewCacheResolver New CacheResolver
 func NewCacheResolver() *CacheResolver {
 	host := &CacheResolver{store: ttlcache.NewCache()}
 	return host

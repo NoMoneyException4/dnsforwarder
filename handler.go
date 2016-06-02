@@ -66,9 +66,8 @@ func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
 			Logger.Infof("Domain %s cached.", question.Name)
 			w.WriteMsg(msg)
 			return
-		} else {
-			dns.HandleFailed(w, req)
 		}
+		dns.HandleFailed(w, req)
 	}
 }
 

@@ -17,7 +17,7 @@ type FileResolver struct {
 	Host
 }
 
-//NewFileHost New FileResolver
+//NewFileResolver New FileResolver
 func NewFileResolver() *FileResolver {
 	host := &FileResolver{
 		files: Conf.Hosts.Resolvs,
