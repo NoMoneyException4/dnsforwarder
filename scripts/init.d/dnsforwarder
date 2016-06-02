@@ -1,0 +1,106 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          dnsforwarder
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Dns server, cacher, forwarder.
+# Description:       DnsForwarder is a dns server, cacher, forwarder.
+#                       It support in-memory cache and dns upstreams.
+### END INIT INFO
+
+TITLE=DnsForwarder
+NAME=dnsforwarder
+BIN=/usr/bin/dnsforwarder
+PIDFILE=/var/run/$NAME.pid
+
+# Exit if the package is not installed
+[ -x $BIN ] || exit 0
+
+# Read env file if it's present
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+: ${USER:="root"}
+: ${GROUP:="root"}
+
+check_running() {
+    if [[ ! -e $PIDFILE ]]; then
+        return 2
+    fi
+    if [[ -r $PIDFILE ]]; then
+        read PID < $PIDFILE
+        if [[ -d /proc/$PID ]]; then
+            return 0
+        else
+            rm -f $PIDFILE
+            return 1
+        fi
+    else
+        return 2
+    fi
+}
+
+do_status() {
+    check_running
+    case $? in
+        0)
+            echo "${TITLE} is running with pid ${PID}"
+            ;;
+        1)
+            echo "${TITLE} is not running, remove pid file ${PIDFILE}"
+            ;;
+        2)
+            echo "${TITLE} is not running."
+            ;;
+    esac
+    return 0
+}
+
+do_start() {
+    if check_running; then
+        echo "${TITLE} is running"
+        return 0
+    fi
+    if [[ ! -r $CONF ]]; then
+        echo "Conf file ${CONF} not found"
+        return 1
+    fi
+    echo "Starting ${TITLE}..."
+
+    ulimit -n ${MFD}
+    sudo -u $USER $BIN -c $CONF >> /dev/null &
+    PID=$!
+    echo $PID
+    echo $PID > $PIDFILE
+    return 0
+}
+
+do_stop() {
+    if check_running; then
+        echo "Stopping ${TITLE}..."
+        kill $PID
+        rm -f $PIDFILE
+    else
+        echo "${TITLE} is not running"
+        return 0
+    fi
+}
+
+do_restart() {
+    do_stop
+    do_start
+}
+
+case "$1" in
+  start|stop|restart|status)
+    do_$1
+    ;;
+  *)
+    echo "Usage: dnsforwarder {start|stop|restart|status}"
+    RET_VAL=1
+    ;;
+esac
+
+exit $RET_VAL
