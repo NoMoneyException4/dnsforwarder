@@ -1,0 +1,12 @@
+[Unit]
+Description=DnsForwarder
+After=network.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/default/dnsforwarder
+User=root
+ExecStart=/usr/bin/dnsforwarder -c /etc/dnsforwarder.yml &
+
+[Install]
+WantedBy=multi-user.target

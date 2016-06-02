@@ -1,7 +1,7 @@
 NAME=dnsforwarder
 TITLE=DnsForwarder
 BUILD := $(shell date '+%Y%m%d')
-VERSION=1.0.1-$(BUILD)
+VERSION=1.0.2-$(BUILD)
 
 bootstrap:
 	go get -u -v github.com/Masterminds/glide
@@ -11,7 +11,7 @@ test:
 	go test -v
 
 build:
-	gox -osarch="darwin/amd64 linux/amd64" -ldflags="-X main.version=${VERSION} -w -s"
+	gox -osarch="linux/amd64" -ldflags="-X main.version=${VERSION} -w -s"
 
 clean:
 	rm -rf dnsforwarder
@@ -30,7 +30,8 @@ deb: clean build
 		./dnsforwarder.yml=/etc/dnsforwarder.yml \
 		./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder \
 		./scripts/etc/dnsforwarder=/etc/default/dnsforwarder \
-		./scripts/init.d/dnsforwarder=/etc/init.d/dnsforwarder
+		./scripts/init.d/dnsforwarder=/etc/init.d/dnsforwarder \
+		./scripts/systemd/dnsforwarder.service=/lib/systemd/system/dnsforwarder.service
 
 rpm: clean build
 	fpm -s dir -t rpm -n ${NAME} -v ${VERSION} -m "Frank Yang <codebear4@gmail.com>" --url https://github.com/codebear4/dnsforwarder \
@@ -40,4 +41,5 @@ rpm: clean build
 		./dnsforwarder.yml=/etc/dnsforwarder.yml \
 		./dnsforwarder_linux_amd64=/usr/bin/dnsforwarder \
 		./scripts/etc/dnsforwarder=/etc/default/dnsforwarder \
-		./scripts/init.d/dnsforwarder=/etc/init.d/dnsforwarder
+		./scripts/init.d/dnsforwarder=/etc/init.d/dnsforwarder \
+		./scripts/systemd/dnsforwarder.service=/lib/systemd/system/dnsforwarder.service
