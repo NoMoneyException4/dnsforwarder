@@ -15,11 +15,12 @@ A dns server, cacher, and forwarder.
 ##### Build from source
 Make sure you have a correctly configured Go installtion first, then:
 ```s
-$ go get -u -v github.com/codebear4/dnsforwarder
+$ make bootstrap
+$ go build
 ```
 
 ##### Install with package
-Download packages from github releases page.
+Download packages from github [releases](https://github.com/codebear4/dnsforwarder/releases) page.
 
 #### Configuration
 `forcetcp`: If set it to `true`, server will use `TCP` connection with upstreams even the request from      client is `UDP` request.
@@ -58,7 +59,7 @@ Download packages from github releases page.
 $ sudo dnsforwarder
 ```
 
-##### Package
+##### Install from package
 ```s
 $ service dnsforwarder start # upstart
 $ systemctl start dnsforwarder #systemd
