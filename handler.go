@@ -11,6 +11,7 @@ type Handler struct {
 	cacheResolver *CacheResolver
 	fileResolver  *FileResolver
 	forwarder     *Forwarder
+	limiter       *Limiter
 }
 
 //NewHandler New Handler
@@ -19,10 +20,15 @@ func NewHandler() *Handler {
 		cacheResolver: NewCacheResolver(),
 		fileResolver:  NewFileResolver(),
 		forwarder:     NewForwarder(),
+		limiter:       NewWhiteListLimiter(),
 	}
 }
 
 func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
+	if !h.limiter.Limit(w, req) {
+		w.Close()
+	}
+
 	question := req.Question[0]
 	Logger.Infof("Query %s for %s.", question.Name, dns.Type(question.Qtype).String())
 
