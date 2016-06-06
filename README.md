@@ -9,6 +9,7 @@ A dns server, cacher, and forwarder.
 * Resolve with multiple upstreams
 * Caching the record from upstreams
 * Support local hosts files
+* White list support
 
 ## Getting started
 #### Installation
