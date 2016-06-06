@@ -30,6 +30,7 @@ type configuration struct {
 		Resolvs []string
 	}
 	Upstreams []string
+	WhiteList []string
 	Loggers   struct {
 		Console struct {
 			Enable bool
