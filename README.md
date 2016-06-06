@@ -4,6 +4,7 @@
 [![Join the chat at https://gitter.im/codebear4/dnsforwarder](https://badges.gitter.im/codebear4/dnsforwarder.svg)](https://gitter.im/codebear4/dnsforwarder?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://semaphoreci.com/api/v1/codebear4/dnsforwarder/branches/master/shields_badge.svg)](https://semaphoreci.com/codebear4/dnsforwarder)
 [![Go Report Card](https://goreportcard.com/badge/github.com/codebear4/dnsforwarder)](https://goreportcard.com/report/github.com/codebear4/dnsforwarder)
+[![Github All Releases](https://img.shields.io/github/downloads/codebear4/dnsforwarder/total.svg?maxAge=2592000)](https://github.com/codebear4/dnsforwarder/releases)
 
 A dns server, cacher, and forwarder.
 * Resolve with multiple upstreams
