@@ -11,7 +11,7 @@ type Handler struct {
 	cacheResolver *CacheResolver
 	fileResolver  *FileResolver
 	forwarder     *Forwarder
-	limiter       *Limiter
+	limiter       Limiter
 }
 
 //NewHandler New Handler
@@ -24,9 +24,11 @@ func NewHandler() *Handler {
 	}
 }
 
-func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
+func (h *Handler) handle(network string, w dns.ResponseWriter, req *dns.Msg) {
 	if !h.limiter.Limit(w, req) {
+		Logger.Infof("Client %s is not in white list. Dropped.", w.RemoteAddr().String())
 		w.Close()
+		return
 	}
 
 	question := req.Question[0]
@@ -56,7 +58,7 @@ func (h *Handler) handle(net string, w dns.ResponseWriter, req *dns.Msg) {
 			w.WriteMsg(m)
 			return
 		}
-		if msg, err := h.forwarder.Lookup(req, net); err == nil {
+		if msg, err := h.forwarder.Lookup(req, network); err == nil {
 			if h.isValidRecord(msg) {
 				ttl := uint32(0)
 				if len(msg.Answer) > 0 {
