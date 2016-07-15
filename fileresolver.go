@@ -68,12 +68,12 @@ func (host *FileResolver) Refresh() {
 			domain := sli[len(sli)-1]
 			ipString := sli[0]
 			if !host.isDomain(domain) {
-				Logger.Debugf("Cannot parse a invalid domain: `%s` from %s .", domain, file)
+				Logger.Debugf("Cannot parse an invalid domain: `%s` from %s .", domain, file)
 				continue
 			}
 
 			if !host.isIP(ipString) {
-				Logger.Debugf("Cannot parse a  invalid ip: `%s` from %s .", ipString, file)
+				Logger.Debugf("Cannot parse an invalid ip: `%s` from %s .", ipString, file)
 				continue
 			}
 
