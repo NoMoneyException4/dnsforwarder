@@ -52,4 +52,5 @@ func LoadConf(path string) {
 	if err != nil {
 		panic(err)
 	}
+	Logger.Infof("Using %s as conf.", path)
 }
