@@ -6,7 +6,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/codebear4/dnsforwarder)](https://goreportcard.com/report/github.com/codebear4/dnsforwarder)
 [![Github All Releases](https://img.shields.io/github/downloads/codebear4/dnsforwarder/total.svg?maxAge=2592000)](https://github.com/codebear4/dnsforwarder/releases)
 
-A dns server, cacher, and forwarder.
+A dns forwarder.
 * Resolve with multiple upstreams
 * Caching the record from upstreams
 * Support local hosts files
@@ -50,7 +50,7 @@ Download packages from github [releases](https://github.com/codebear4/dnsforward
 
 `host`:
 * `enable`: Resolve with hosts files
-* `resolvs`: Hosts files list
+* `resolves`: Hosts files list
 
 `upstreams`: List of upstream dns servers
 

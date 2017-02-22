@@ -44,6 +44,7 @@ func (l *WhiteListLimiter) Limit(w dns.ResponseWriter, req *dns.Msg) bool {
 	return false
 }
 
+//RemoteIP get remote ip from response writer
 func (l *WhiteListLimiter) RemoteIP(w dns.ResponseWriter) (net.IP, error) {
 	switch w.RemoteAddr().(type) {
 	case *net.UDPAddr:

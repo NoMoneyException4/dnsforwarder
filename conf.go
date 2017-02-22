@@ -27,7 +27,7 @@ type configuration struct {
 	}
 	Hosts struct {
 		Enable  bool
-		Resolvs []string
+		Resolves []string
 	}
 	Upstreams []string
 	WhiteList []string
