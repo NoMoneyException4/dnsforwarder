@@ -20,7 +20,7 @@ type FileResolver struct {
 //NewFileResolver New FileResolver
 func NewFileResolver() *FileResolver {
 	host := &FileResolver{
-		files: Conf.Hosts.Resolvs,
+		files: Conf.Hosts.Resolves,
 		hosts: make(map[string][]string, 0),
 	}
 	host.Refresh()
