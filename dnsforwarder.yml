@@ -19,7 +19,7 @@ timeout:
     write: 200
 hosts:
   enable: true #Enable hosts file support
-  resolvs:
+  resolves:
     - /etc/hosts
 upstreams:
   - "tcp://114.114.114.114:53"
