@@ -10,7 +10,7 @@ var (
 )
 
 type configuration struct {
-	ForceTcp bool
+	ForceTCP bool
 	Cache    struct {
 		Enable bool
 		TTL    uint32

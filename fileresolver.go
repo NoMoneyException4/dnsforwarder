@@ -35,7 +35,7 @@ func (host *FileResolver) Get(domain string) ([]string, error) {
 		Logger.Debugf("[HitHost] Domain %s found in hosts files.", domain)
 		return addrs, nil
 	}
-	return nil, errors.New("Not found.")
+	return nil, errors.New("not found")
 }
 
 //Refresh Refresh the cached records

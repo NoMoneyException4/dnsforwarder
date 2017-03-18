@@ -22,7 +22,7 @@ func NewCacheResolver() *CacheResolver {
 func (host *CacheResolver) Get(domain string) (*Record, error) {
 	record, ok := host.store.Get(domain)
 	if !ok {
-		return nil, errors.New("Not found.")
+		return nil, errors.New("not found")
 	}
 	Logger.Debugf("[HitCache] Get record of domain %s from cache.", domain)
 	return record.(*Record), nil

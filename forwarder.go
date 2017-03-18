@@ -37,7 +37,7 @@ func parseUpstreams(upstreams []string) map[string][]string {
 func parseUpstream(upstream string) (net, server string, err error) {
 	upstreamSlice := strings.Split(upstream, "://")
 	if len(upstreamSlice) != 2 {
-		err = errors.New("A valid server config must contains `://` .")
+		err = errors.New("a valid server config must contains `://` ")
 		return
 	}
 
@@ -66,7 +66,7 @@ func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
 		}
 		if resp != nil && resp.Rcode == dns.RcodeServerFailure {
 			Logger.Warningf("%s failed to get an valid record from upstream %s", domain, server)
-			err <- errors.New("Upstream server failure.")
+			err <- errors.New("upstream server failure")
 			return
 		}
 
