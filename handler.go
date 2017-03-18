@@ -88,7 +88,7 @@ func (h *Handler) HandleTCP(w dns.ResponseWriter, req *dns.Msg) {
 
 //HandleUDP Handle UDP conn
 func (h *Handler) HandleUDP(w dns.ResponseWriter, req *dns.Msg) {
-	if Conf.ForceTcp {
+	if Conf.ForceTCP {
 		h.handle("tcp", w, req)
 	} else {
 		h.handle("udp", w, req)
