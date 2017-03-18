@@ -26,7 +26,7 @@ type configuration struct {
 		}
 	}
 	Hosts struct {
-		Enable  bool
+		Enable   bool
 		Resolves []string
 	}
 	Upstreams []string
@@ -52,5 +52,4 @@ func LoadConf(path string) {
 	if err != nil {
 		panic(err)
 	}
-	Logger.Infof("Using %s as conf.", path)
 }
