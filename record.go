@@ -4,7 +4,7 @@ import (
 	"github.com/miekg/dns"
 )
 
-//Record Cache record
+// Record Cache record
 type Record struct {
 	Domain  string
 	Type    uint16

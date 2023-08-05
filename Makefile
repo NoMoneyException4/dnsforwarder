@@ -3,15 +3,14 @@ TITLE=DnsForwarder
 BUILD := $(shell date '+%Y%m%d')
 VERSION=1.0.6-$(BUILD)
 
-bootstrap:
-	go get -u -v github.com/Masterminds/glide
-	glide install
-
 test:
 	go test -v
 
 build:
-	gox -osarch="linux/amd64" -ldflags="-X main.version=${VERSION} -w -s"
+	go build -ldflags="-X main.version=${VERSION} -w -s"
+
+build-linux:
+	CGO_ENABLE=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X main.version=${VERSION} -w -s"
 
 clean:
 	rm -rf dnsforwarder
@@ -20,10 +19,9 @@ clean:
 
 package-bootstrap:
 	sudo gem install fpm --no-ri --no-rdoc
-	go get -u -v github.com/mitchellh/gox
 
-deb: clean build
-	fpm -s dir -t deb -n ${NAME} -v ${VERSION} -m "Frank Yang <codebear4@gmail.com>" --url https://github.com/codebear4/dnsforwarder \
+deb: clean build-linux
+	fpm -s dir -t deb -n ${NAME} -v ${VERSION} -m "Frank Yang <Yangshifu1024@qq.com>" --url https://github.com/Yangshifu1024/dnsforwarder \
 		--license MIT --vendor "Frank Yang" \
 		--after-install ./scripts/postinstall \
 		--after-remove ./scripts/postuninstall \
@@ -33,8 +31,8 @@ deb: clean build
 		./scripts/init.d/dnsforwarder=/etc/init.d/dnsforwarder \
 		./scripts/systemd/dnsforwarder.service=/lib/systemd/system/dnsforwarder.service
 
-rpm: clean build
-	fpm -s dir -t rpm -n ${NAME} -v ${VERSION} -m "Frank Yang <codebear4@gmail.com>" --url https://github.com/codebear4/dnsforwarder \
+rpm: clean build-linux
+	fpm -s dir -t rpm -n ${NAME} -v ${VERSION} -m "Frank Yang <Yangshifu1024@qq.com>" --url https://github.com/Yangshifu1024/dnsforwarder \
 		--license MIT --vendor "Frank Yang" \
 		--after-install ./scripts/postinstall \
 		--after-remove ./scripts/postuninstall \

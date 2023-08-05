@@ -27,7 +27,10 @@ func initial() {
 	flag.StringVar(&listenPort, "p", "53", "Listening port.")
 	flag.BoolVar(&debug, "d", false, "Debug Mode")
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "DnsForwarder version %s\n", version)
+		_, err := fmt.Fprintf(os.Stderr, "DnsForwarder version %s\n", version)
+		if err != nil {
+			Logger.Error(err)
+		}
 		flag.PrintDefaults()
 	}
 	flag.Parse()

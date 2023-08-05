@@ -10,25 +10,25 @@ import (
 	"github.com/miekg/dns"
 )
 
-//FileResolver File based host resolver
+// FileResolver File based host resolver
 type FileResolver struct {
 	files []string
 	hosts map[string][]string
 	Host
 }
 
-//NewFileResolver New FileResolver
+// NewFileResolver New FileResolver
 func NewFileResolver() *FileResolver {
 	host := &FileResolver{
 		files: Conf.Hosts.Resolves,
-		hosts: make(map[string][]string, 0),
+		hosts: make(map[string][]string),
 	}
 	host.Refresh()
 
 	return host
 }
 
-//Get Get host from cache
+// Get host from cache
 func (host *FileResolver) Get(domain string) ([]string, error) {
 	addrs, ok := host.hosts[domain]
 	if ok {
@@ -38,7 +38,7 @@ func (host *FileResolver) Get(domain string) ([]string, error) {
 	return nil, errors.New("not found")
 }
 
-//Refresh Refresh the cached records
+// Refresh the cached records
 func (host *FileResolver) Refresh() {
 	for _, file := range host.files {
 		buf, err := os.OpenFile(file, os.O_RDONLY, 0777)

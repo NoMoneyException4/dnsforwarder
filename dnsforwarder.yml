@@ -4,10 +4,10 @@ cache:
   ttl: 3600
 loggers:
   console:
-    enable: false
+    enable: true
     level: debug
   file:
-    enable: true
+    enable: false
     level: debug #Also in these values: debug info notice warning error critical
     path: /tmp/dnsforwarder.log
 timeout:

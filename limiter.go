@@ -7,18 +7,18 @@ import (
 	"github.com/miekg/dns"
 )
 
-//Limiter Limiter interface
+// Limiter Limiter interface
 type Limiter interface {
 	Limit(dns.ResponseWriter, *dns.Msg) bool
 	RemoteIP(dns.ResponseWriter) (net.IP, error)
 }
 
-//WhiteListLimiter Limiter with white list
+// WhiteListLimiter Limiter with white list
 type WhiteListLimiter struct {
 	lists []*net.IPNet
 }
 
-//NewWhiteListLimiter New WhiteListLimiter with conf
+// NewWhiteListLimiter New WhiteListLimiter with conf
 func NewWhiteListLimiter() *WhiteListLimiter {
 	lists := make([]*net.IPNet, 0)
 	for _, str := range Conf.WhiteList {
@@ -29,8 +29,8 @@ func NewWhiteListLimiter() *WhiteListLimiter {
 	return &WhiteListLimiter{lists}
 }
 
-//Limit limit the request
-func (l *WhiteListLimiter) Limit(w dns.ResponseWriter, req *dns.Msg) bool {
+// Limit limit the request
+func (l *WhiteListLimiter) Limit(w dns.ResponseWriter, _ *dns.Msg) bool {
 	ip, err := l.RemoteIP(w)
 	if err != nil {
 		return false
@@ -44,7 +44,7 @@ func (l *WhiteListLimiter) Limit(w dns.ResponseWriter, req *dns.Msg) bool {
 	return false
 }
 
-//RemoteIP get remote ip from response writer
+// RemoteIP get remote ip from response writer
 func (l *WhiteListLimiter) RemoteIP(w dns.ResponseWriter) (net.IP, error) {
 	switch w.RemoteAddr().(type) {
 	case *net.UDPAddr:

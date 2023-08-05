@@ -1,6 +1,0 @@
-package: github.com/codebear4/dnsforwarder
-import:
-- package: github.com/codebear4/ttlcache
-- package: github.com/mailgun/cfg
-- package: github.com/miekg/dns
-- package: github.com/op/go-logging

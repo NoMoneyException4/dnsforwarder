@@ -22,7 +22,7 @@ $ go build
 ```
 
 ##### Install with package
-Download packages from github [releases](https://github.com/codebear4/dnsforwarder/releases) page.
+Download packages from GitHub [releases](https://github.com/codebear4/dnsforwarder/releases) page.
 
 #### Configuration
 `forcetcp`: If set it to `true`, server will use `TCP` connection with upstreams even the request from      client is `UDP` request.

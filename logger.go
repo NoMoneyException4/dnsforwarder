@@ -17,7 +17,7 @@ var (
 	)
 )
 
-//InitLogger Init Logger
+// InitLogger Init Logger
 func InitLogger() {
 	Logger = logging.MustGetLogger("dnsforwarder")
 	var loggers []logging.Backend

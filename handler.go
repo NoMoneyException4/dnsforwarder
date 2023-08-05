@@ -6,7 +6,7 @@ import (
 	"github.com/miekg/dns"
 )
 
-//Handler Handle all the queries
+// Handler Handle all the queries
 type Handler struct {
 	cacheResolver *CacheResolver
 	fileResolver  *FileResolver
@@ -14,7 +14,7 @@ type Handler struct {
 	limiter       Limiter
 }
 
-//NewHandler New Handler
+// NewHandler New Handler
 func NewHandler() *Handler {
 	return &Handler{
 		cacheResolver: NewCacheResolver(),
@@ -27,7 +27,10 @@ func NewHandler() *Handler {
 func (h *Handler) handle(network string, w dns.ResponseWriter, req *dns.Msg) {
 	if !h.limiter.Limit(w, req) {
 		Logger.Infof("Client %s is not in white list. Dropped.", w.RemoteAddr().String())
-		w.Close()
+		err := w.Close()
+		if err != nil {
+			Logger.Error(err)
+		}
 		return
 	}
 
@@ -44,7 +47,10 @@ func (h *Handler) handle(network string, w dns.ResponseWriter, req *dns.Msg) {
 				answer := h.buildAnswer(header, addr)
 				m.Answer = append(m.Answer, answer)
 			}
-			w.WriteMsg(m)
+			err := w.WriteMsg(m)
+			if err != nil {
+				Logger.Error(err)
+			}
 			return
 		}
 		fallthrough
@@ -55,7 +61,10 @@ func (h *Handler) handle(network string, w dns.ResponseWriter, req *dns.Msg) {
 			for _, answer := range record.Answers {
 				m.Answer = append(m.Answer, answer)
 			}
-			w.WriteMsg(m)
+			err := w.WriteMsg(m)
+			if err != nil {
+				Logger.Error(err)
+			}
 			return
 		}
 		if msg, err := h.forwarder.Lookup(req, network); err == nil {
@@ -66,27 +75,33 @@ func (h *Handler) handle(network string, w dns.ResponseWriter, req *dns.Msg) {
 				} else {
 					ttl = Conf.Cache.TTL
 				}
-				h.cacheResolver.Set(question.Name, &Record{
+				err := h.cacheResolver.Set(question.Name, &Record{
 					Domain:  question.Name,
 					Type:    question.Qtype,
 					TTL:     ttl,
 					Answers: msg.Answer,
 				})
+				if err != nil {
+					Logger.Error(err)
+				}
 				Logger.Infof("Domain %s cached.", question.Name)
 			}
-			w.WriteMsg(msg)
+			err := w.WriteMsg(msg)
+			if err != nil {
+				Logger.Error(err)
+			}
 			return
 		}
 		dns.HandleFailed(w, req)
 	}
 }
 
-//HandleTCP Handle TCP conn
+// HandleTCP Handle TCP conn
 func (h *Handler) HandleTCP(w dns.ResponseWriter, req *dns.Msg) {
 	h.handle("tcp", w, req)
 }
 
-//HandleUDP Handle UDP conn
+// HandleUDP Handle UDP conn
 func (h *Handler) HandleUDP(w dns.ResponseWriter, req *dns.Msg) {
 	if Conf.ForceTCP {
 		h.handle("tcp", w, req)
@@ -107,11 +122,11 @@ func (h *Handler) buildRRHeader(name string, qtype uint16, ttl uint32) dns.RR_He
 func (h *Handler) buildAnswer(header dns.RR_Header, target string) dns.RR {
 	switch header.Rrtype {
 	case dns.TypeA:
-		return &dns.A{header, net.ParseIP(target).To4()}
+		return &dns.A{Hdr: header, A: net.ParseIP(target).To4()}
 	case dns.TypeAAAA:
-		return &dns.A{header, net.ParseIP(target).To16()}
+		return &dns.A{Hdr: header, A: net.ParseIP(target).To16()}
 	default:
-		Logger.Errorf("Unsupport query: %#v", header)
+		Logger.Errorf("Unsupported query: %#v", header)
 		return &dns.A{}
 	}
 }

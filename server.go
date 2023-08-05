@@ -8,7 +8,7 @@ import (
 	"github.com/miekg/dns"
 )
 
-//Server Server
+// Server Server
 type Server struct {
 	Host         string
 	Port         string
@@ -16,7 +16,7 @@ type Server struct {
 	WriteTimeout time.Duration
 }
 
-//NewServer New Server
+// NewServer New Server
 func NewServer(host, port string, rt, wt time.Duration) *Server {
 	return &Server{
 		Host:         host,
@@ -26,12 +26,12 @@ func NewServer(host, port string, rt, wt time.Duration) *Server {
 	}
 }
 
-//Addr Return the addr that server is listening at
+// Addr Return the addr that server is listening at
 func (s *Server) Addr() string {
 	return net.JoinHostPort(s.Host, s.Port)
 }
 
-//Listen Listen
+// Listen Server start listen
 func (s *Server) Listen() {
 	handler := NewHandler()
 

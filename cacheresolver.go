@@ -7,18 +7,18 @@ import (
 	"github.com/codebear4/ttlcache"
 )
 
-//CacheResolver In-memory based host resolver
+// CacheResolver In-memory based host resolver
 type CacheResolver struct {
 	store *ttlcache.Cache
 }
 
-//NewCacheResolver New CacheResolver
+// NewCacheResolver New CacheResolver
 func NewCacheResolver() *CacheResolver {
 	host := &CacheResolver{store: ttlcache.NewCache()}
 	return host
 }
 
-//Get Get host from cache
+// Get host from cache
 func (host *CacheResolver) Get(domain string) (*Record, error) {
 	record, ok := host.store.Get(domain)
 	if !ok {
@@ -28,7 +28,7 @@ func (host *CacheResolver) Get(domain string) (*Record, error) {
 	return record.(*Record), nil
 }
 
-//All Get all hosts
+// All Get all hosts
 func (host *CacheResolver) All() []*Record {
 	allKeys := host.store.Items()
 	all := make([]*Record, len(allKeys))
@@ -41,12 +41,12 @@ func (host *CacheResolver) All() []*Record {
 	return all
 }
 
-//Clear Purge hosts
+// Clear Purge hosts
 func (host *CacheResolver) Clear() {
 	host.store = ttlcache.NewCache()
 }
 
-//Set Set host with given Record
+// Set host with given Record
 func (host *CacheResolver) Set(domain string, record *Record) error {
 	host.store.SetWithTTL(domain, record, time.Duration(record.TTL)*time.Second)
 	return nil

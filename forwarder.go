@@ -9,12 +9,12 @@ import (
 	"github.com/miekg/dns"
 )
 
-//Forwarder Forwarder forward the request to upstreams
+// Forwarder forward the request to upstreams
 type Forwarder struct {
 	upstreams map[string][]string
 }
 
-//NewForwarder New Forwarder
+// NewForwarder New Forwarder
 func NewForwarder() *Forwarder {
 	upstreams := parseUpstreams(Conf.Upstreams)
 	return &Forwarder{
@@ -23,7 +23,7 @@ func NewForwarder() *Forwarder {
 }
 
 func parseUpstreams(upstreams []string) map[string][]string {
-	servers := make(map[string][]string, 0)
+	servers := make(map[string][]string)
 	for _, upstream := range upstreams {
 		net, server, err := parseUpstream(upstream)
 		if err != nil {
@@ -46,7 +46,7 @@ func parseUpstream(upstream string) (net, server string, err error) {
 	return
 }
 
-//Lookup Lookup the given domain with upstreams
+// Lookup the given domain with upstreams
 func (f *Forwarder) Lookup(req *dns.Msg, net string) (*dns.Msg, error) {
 	var wg sync.WaitGroup
 	lookup := func(net string, req *dns.Msg, server string, result chan *dns.Msg, err chan error) {
